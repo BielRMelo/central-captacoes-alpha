@@ -132,9 +132,24 @@ export default function FotografoSolicitacoesPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          {filtered.map((req) => (
-            <CardJob key={req.id} request={req} onPick={handlePick} />
-          ))}
+          {filtered.map((req) => {
+            const mapped: CaptureRequest = {
+              id: req.id,
+              cliente: req.cliente,
+              cidade: req.cidade,
+              estado: req.estado,
+              bairro: req.bairro || "",
+              tipoCaptacao: req.tipoCaptacao,
+              descricaoTipo: req.descricaoTipo || "",
+              tipoCliente: req.tipoCliente || "",
+              duracaoEstimativaHoras: 2,
+              valorReceber: req.valorReceber ?? 0,
+              prazoEntrega: req.prazoEntrega || req.dataDesejada,
+              dataDesejada: req.dataDesejada,
+              status: "DISPONIVEL",
+            };
+            return <CardJob key={req.id} request={mapped} onPick={handlePick} />;
+          })}
           {filtered.length === 0 && (
             <p className="text-sm text-neutral-400">
               Nenhuma solicitação encontrada com os filtros selecionados.
