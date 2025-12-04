@@ -1,26 +1,369 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Tema base Alpha: fundo bem escuro, texto claro, accent laranja */
+  --background: #050509;
+  --foreground: #f9fafb;
+
+  /* Tons de laranja/amarelo Alpha */
+  --alpha-50: #fffbeb;
+  --alpha-100: #fef3c7;
+  --alpha-200: #fde68a;
+  --alpha-300: #fcd34d;
+  --alpha-400: #fbbf24;
+  --alpha-500: #f59e0b;
+  --alpha-600: #d97706;
+  --alpha-700: #b45309;
+  --alpha-800: #92400e;
+  --alpha-900: #78350f;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-alpha-50: var(--alpha-50);
+  --color-alpha-100: var(--alpha-100);
+  --color-alpha-200: var(--alpha-200);
+  --color-alpha-300: var(--alpha-300);
+  --color-alpha-400: var(--alpha-400);
+  --color-alpha-500: var(--alpha-500);
+  --color-alpha-600: var(--alpha-600);
+  --color-alpha-700: var(--alpha-700);
+  --color-alpha-800: var(--alpha-800);
+  --color-alpha-900: var(--alpha-900);
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(circle at top, #18181b 0, var(--background) 55%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Card animado inspirado em Aaron Iker (adaptado para o projeto Alpha) */
+.alpha-anim-card {
+  --aa-bg: rgba(24, 24, 27, 1);
+  --aa-text: #a1a1aa;
+  --aa-label: #f9fafb;
+  --aa-icon: #facc15; /* amarelo suave */
+  --aa-icon-bg: rgba(250, 204, 21, 0.12);
+  --aa-icon-border: rgba(250, 204, 21, 0.3);
+  --aa-line: #2a2b2c;
+  --aa-tile: rgba(245, 158, 11, 0.12); /* laranja Alpha suave */
+  --aa-shine-opacity: 0.22;
+  --aa-shine-gradient: conic-gradient(
+    from 210deg at 50% 50%,
+    rgba(245, 158, 11, 0) 0deg,
+    #f59e0b 25deg,
+    rgba(250, 204, 21, 0.45) 295deg,
+    rgba(245, 158, 11, 0) 360deg
+  );
+  --aa-border: rgba(255, 255, 255, 0.12);
+  --aa-border-hover: rgba(255, 255, 255, 0.24);
+  --aa-shadow-1: rgba(0, 0, 0, 0.06);
+  --aa-shadow-1-y: 3px;
+  --aa-shadow-1-blur: 6px;
+  --aa-shadow-2: rgba(0, 0, 0, 0.16);
+  --aa-shadow-2-y: 10px;
+  --aa-shadow-2-blur: 22px;
+  --aa-shadow-1-hover: rgba(0, 0, 0, 0.08);
+  --aa-shadow-2-hover: rgba(0, 0, 0, 0.32);
+  --aa-shadow-2-y-hover: 18px;
+  --aa-shadow-2-blur-hover: 30px;
+
+  position: relative;
+  padding: 52px 18px 18px 18px;
+  border-radius: 16px;
+  cursor: default;
+  background-color: var(--aa-bg);
+  box-shadow:
+    0 var(--aa-shadow-1-y) var(--aa-shadow-1-blur) var(--aa-shadow-1),
+    0 var(--aa-shadow-2-y) var(--aa-shadow-2-blur) var(--aa-shadow-2),
+    0 0 0 1px var(--aa-border);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.alpha-anim-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.6) 0, transparent 55%);
+  pointer-events: none;
+}
+
+.alpha-anim-card__icon {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  padding: 8px;
+}
+
+.alpha-anim-card__icon::after {
+  content: "";
+  position: absolute;
+  inset: 4.5px;
+  border-radius: 999px;
+  background-color: var(--aa-icon-bg);
+  border: 1px solid var(--aa-icon-border);
+  backdrop-filter: blur(3px);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.alpha-anim-card__icon svg {
+  position: relative;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+  display: block;
+  color: var(--aa-icon);
+  transition: color 0.25s ease;
+}
+
+.alpha-anim-card h4 {
+  position: relative;
+  z-index: 2;
+  margin: 12px 0 4px 0;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--aa-label);
+}
+
+.alpha-anim-card p {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--aa-text);
+}
+
+.alpha-anim-card__shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+
+.alpha-anim-card__shine::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 55%;
+  width: 150%;
+  padding-bottom: 150%;
+  border-radius: 999px;
+  filter: blur(38px);
+  opacity: var(--aa-shine-opacity);
+  transform: translateX(-50%);
+  background-image: var(--aa-shine-gradient);
+}
+
+.alpha-anim-card__background {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 60%);
+  -webkit-mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 60%);
+}
+
+.alpha-anim-card__tiles {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.alpha-anim-card__tile {
+  position: absolute;
+  background-color: var(--aa-tile);
+  animation-duration: 8s;
+  animation-iteration-count: infinite;
+  opacity: 0;
+}
+
+.alpha-anim-card__tile--4,
+.alpha-anim-card__tile--6,
+.alpha-anim-card__tile--10 {
+  animation-delay: -2s;
+}
+
+.alpha-anim-card__tile--3,
+.alpha-anim-card__tile--5,
+.alpha-anim-card__tile--8 {
+  animation-delay: -4s;
+}
+
+.alpha-anim-card__tile--2,
+.alpha-anim-card__tile--9 {
+  animation-delay: -6s;
+}
+
+.alpha-anim-card__tile--1 {
+  top: 0;
+  left: 0;
+  height: 10%;
+  width: 22.5%;
+}
+.alpha-anim-card__tile--2 {
+  top: 0;
+  left: 22.5%;
+  height: 10%;
+  width: 27.5%;
+}
+.alpha-anim-card__tile--3 {
+  top: 0;
+  left: 50%;
+  height: 10%;
+  width: 27.5%;
+}
+.alpha-anim-card__tile--4 {
+  top: 0;
+  left: 77.5%;
+  height: 10%;
+  width: 22.5%;
+}
+.alpha-anim-card__tile--5 {
+  top: 10%;
+  left: 0;
+  height: 22.5%;
+  width: 22.5%;
+}
+.alpha-anim-card__tile--6 {
+  top: 10%;
+  left: 22.5%;
+  height: 22.5%;
+  width: 27.5%;
+}
+.alpha-anim-card__tile--7 {
+  top: 10%;
+  left: 50%;
+  height: 22.5%;
+  width: 27.5%;
+}
+.alpha-anim-card__tile--8 {
+  top: 10%;
+  left: 77.5%;
+  height: 22.5%;
+  width: 22.5%;
+}
+.alpha-anim-card__tile--9 {
+  top: 32.5%;
+  left: 50%;
+  height: 22.5%;
+  width: 27.5%;
+}
+.alpha-anim-card__tile--10 {
+  top: 32.5%;
+  left: 77.5%;
+  height: 22.5%;
+  width: 22.5%;
+}
+
+@keyframes alpha-anim-tile {
+  0%,
+  12.5%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  82.5% {
+    opacity: 0;
+  }
+}
+
+.alpha-anim-card__line {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.alpha-anim-card__line::before,
+.alpha-anim-card__line::after {
+  content: "";
+  position: absolute;
+  background-color: var(--aa-line);
+  transition: transform 0.35s ease;
+}
+
+.alpha-anim-card__line::before {
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+.alpha-anim-card__line::after {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+}
+
+.alpha-anim-card__line--1::before {
+  top: 10%;
+}
+.alpha-anim-card__line--1::after {
+  left: 22.5%;
+}
+
+.alpha-anim-card__line--2::before {
+  top: 32.5%;
+}
+.alpha-anim-card__line--2::after {
+  left: 50%;
+}
+
+.alpha-anim-card__line--3::before {
+  top: 55%;
+}
+.alpha-anim-card__line--3::after {
+  right: 22.5%;
+}
+
+.alpha-anim-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 var(--aa-shadow-1-y) var(--aa-shadow-1-blur) var(--aa-shadow-1-hover),
+    0 var(--aa-shadow-2-y-hover) var(--aa-shadow-2-blur-hover) var(--aa-shadow-2-hover),
+    0 0 0 1px var(--aa-border-hover);
+}
+
+.alpha-anim-card:hover .alpha-anim-card__icon::after {
+  background-color: rgba(245, 158, 11, 0.16);
+  border-color: rgba(250, 204, 21, 0.5);
+}
+
+.alpha-anim-card:hover .alpha-anim-card__icon svg {
+  color: #facc15;
+}
+
+.alpha-anim-card:hover .alpha-anim-card__shine {
+  opacity: 1;
+}
+
+.alpha-anim-card:hover .alpha-anim-card__tiles {
+  opacity: 1;
+}
+
+.alpha-anim-card:hover .alpha-anim-card__tile {
+  animation-name: alpha-anim-tile;
+}
+
+.alpha-anim-card:hover .alpha-anim-card__line {
+  opacity: 1;
+}
+
+.alpha-anim-card:hover .alpha-anim-card__line::before {
+  transform: scaleX(1);
+}
+
+.alpha-anim-card:hover .alpha-anim-card__line::after {
+  transform: scaleY(1);
 }
